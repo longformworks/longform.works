@@ -1,0 +1,57 @@
+---
+import '../styles/global.css';
+import fonts from '../generated/fonts.json';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const site = '长作 Longform Works';
+const {
+  title,
+  description = '长作 Longform Works. Long-term projects, worked on a little at a time.',
+} = Astro.props;
+const fullTitle = title ? `${title} — ${site}` : site;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+
+<!doctype html>
+<html lang="en" data-lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {fonts.preload.map((href) => <link rel="preload" as="font" type="font/woff2" href={href} crossorigin />)}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#eef1f5" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#101624" media="(prefers-color-scheme: dark)" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL('/og.png', Astro.site)} />
+    <meta name="twitter:card" content="summary" />
+    <script is:inline>
+      // 首屏之前决定语言，避免闪一下英文。
+      (function () {
+        var lang;
+        try {
+          lang = localStorage.getItem('lang');
+        } catch (e) {}
+        if (lang !== 'en' && lang !== 'zh') {
+          lang = /^zh\b/i.test(navigator.language || '') ? 'zh' : 'en';
+        }
+        document.documentElement.dataset.lang = lang;
+        document.documentElement.lang = lang === 'zh' ? 'zh-Hans' : 'en';
+      })();
+    </script>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

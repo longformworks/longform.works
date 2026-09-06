@@ -1,0 +1,156 @@
+---
+/**
+ * 首页正文（一种语言）：品牌名、一句话，和印章色块。
+ * index.astro 渲染两份，用 html[data-lang] 控制显示哪份。页眉页脚是共用的。
+ */
+import { copy, locales, brand, type Locale } from '../i18n';
+import glyphs from '../generated/glyphs.json';
+
+interface Props {
+  locale: Locale;
+}
+const { locale } = Astro.props;
+const t = copy[locale];
+const lang = locales.find((l) => l.code === locale)!.lang;
+const g = glyphs['长'];
+const cx = (g.x1 + g.x2) / 2;
+const cy = (g.y1 + g.y2) / 2;
+---
+
+<main id={`main-${locale}`} class="home" tabindex="-1" lang={lang} data-locale={locale}>
+  <section class="identity">
+    <h1 class="name">
+      <span class="name__zh" lang="zh-Hans">{brand.zh}</span>
+      <span class="name__latin" lang="en">{brand.latin}</span>
+    </h1>
+    <p class="method">{t.method}</p>
+  </section>
+
+  <div class="mark" aria-hidden="true">
+    <svg class="mark__glyph seal--stamp" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet">
+      <path d={g.d} fill="var(--seal-ink)" transform={`translate(50 50) scale(0.078) translate(${-cx} ${-cy})`}></path>
+    </svg>
+  </div>
+
+</main>
+
+<style>
+  .home {
+    width: 100%;
+    max-width: var(--page);
+    margin: 0 auto;
+    padding: 2rem var(--gutter) 1.5rem;
+    font-family: var(--sans);
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    align-content: start;
+  }
+
+  /* 桌面端：左边身份、右边 26rem 正方形色块，行高由色块决定；左栏名字在顶、那句在底 */
+  @media (min-width: 64em) {
+    .home {
+      padding-top: 3rem;
+      grid-template-columns: 1fr 26rem;
+      column-gap: 3rem;
+      align-items: stretch;
+    }
+
+    .identity {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding-bottom: 0.5rem;
+    }
+
+    .identity .method {
+      margin-top: 3rem;
+    }
+  }
+
+  /* 印章色块：任何尺寸都是正方形；胭脂红底，放大裁切的「长」 */
+  .mark {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    max-width: 26rem;
+    aspect-ratio: 1 / 1;
+    border-radius: 8px;
+    background: var(--seal);
+  }
+
+  .mark__glyph {
+    position: absolute;
+    width: 150%;
+    height: 150%;
+    right: -38%;
+    bottom: -42%;
+    transform-box: view-box;
+    transform-origin: 33% 46%; /* 大约在笔画交叉处，落印时像压在那一点上 */
+  }
+
+  /* 落印：加载时一次，切换语言时再一次 */
+  .mark__glyph.seal--stamp {
+    animation: stamp 640ms cubic-bezier(0.2, 0.9, 0.3, 1) 200ms both;
+  }
+
+  :global(.mark__glyph.seal--restamp) {
+    animation-delay: 0ms !important;
+  }
+
+  @keyframes stamp {
+    from {
+      opacity: 0;
+      transform: scale(1.25) rotate(-3deg);
+    }
+    28% {
+      opacity: 1;
+    }
+    60% {
+      opacity: 1;
+      transform: scale(0.985) rotate(0.4deg);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) rotate(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mark__glyph.seal--stamp {
+      animation: none;
+    }
+  }
+
+  /* 品牌 */
+  .name {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-weight: 400;
+  }
+
+  .name__zh {
+    font-family: var(--serif-cjk);
+    font-size: clamp(3rem, 5vw, 4.5rem);
+    line-height: 1.05;
+    letter-spacing: 0.02em;
+  }
+
+  .name__latin {
+    font-family: var(--serif);
+    font-size: 1.5rem;
+    line-height: 1.2;
+    color: var(--ink);
+  }
+
+  .method {
+    margin: 1.75rem 0 0;
+    font-size: 1.125rem;
+    line-height: 1.55;
+    max-width: 36rem;
+  }
+
+</style>

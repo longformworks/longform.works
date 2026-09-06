@@ -1,0 +1,23 @@
+---
+import Base from '../layouts/Base.astro';
+import SkipLink from '../components/SkipLink.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import WorksList from '../components/WorksList.astro';
+---
+
+<Base title="Works 作品">
+  <SkipLink />
+  <SiteHeader />
+  <WorksList locale="en" />
+  <WorksList locale="zh" />
+  <SiteFooter />
+</Base>
+
+<script>
+  import { setLang, syncSwitch, type Lang } from '../scripts/lang';
+  syncSwitch();
+  document.querySelectorAll<HTMLButtonElement>('[data-switch-to]').forEach((b) => {
+    b.addEventListener('click', () => setLang(b.dataset.switchTo as Lang, true));
+  });
+</script>

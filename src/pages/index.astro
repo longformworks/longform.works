@@ -1,0 +1,24 @@
+---
+import Base from '../layouts/Base.astro';
+import SkipLink from '../components/SkipLink.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import Home from '../components/Home.astro';
+---
+
+<Base>
+  <SkipLink />
+  <SiteHeader />
+  <Home locale="en" />
+  <Home locale="zh" />
+  <SiteFooter />
+</Base>
+
+<script>
+  // 语言切换：记住选择；首屏的判断在 Base.astro 的 head 里已经做过。
+  import { setLang, syncSwitch, type Lang } from '../scripts/lang';
+  syncSwitch();
+  document.querySelectorAll<HTMLButtonElement>('[data-switch-to]').forEach((b) => {
+    b.addEventListener('click', () => setLang(b.dataset.switchTo as Lang, true));
+  });
+</script>

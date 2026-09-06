@@ -1,0 +1,46 @@
+---
+/** 共用页脚：署名、GitHub、字体与托管说明。 */
+import { copy, locales } from '../i18n';
+---
+
+<footer class="site-footer">
+  {
+    locales.map((l) => {
+      const t = copy[l.code];
+      return (
+        <div class="site-footer__inner" data-locale={l.code} lang={l.lang}>
+          <p class="made">
+            <span>{t.madeBefore}<a href="https://alvie.me" lang="en">{t.madeName}</a>{t.madeAfter}</span>
+            <a class="code" href="https://github.com/longformworks" lang="en">{t.code}</a>
+          </p>
+        </div>
+      );
+    })
+  }
+</footer>
+
+<style>
+  .site-footer {
+    width: 100%;
+    max-width: var(--page);
+    margin: auto auto 0; /* 内容短时页脚贴底 */
+    padding: 2rem var(--gutter) 2rem;
+    font-family: var(--sans);
+    scroll-margin-top: 1rem;
+  }
+
+  .site-footer__inner {
+    border-top: 1px solid var(--rule);
+    padding-top: 1.5rem;
+  }
+
+  .made {
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+    gap: 1.5rem;
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+</style>

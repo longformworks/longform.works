@@ -1,0 +1,27 @@
+{
+  "name": "longform.works",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@fontsource/source-sans-3": "^5.3.0",
+    "@fontsource/spectral": "^5.3.0",
+    "astro": "^7.3.1",
+    "wrangler": "^4.129.0"
+  },
+  "allowScripts": {
+    "esbuild": true
+  },
+  "devDependencies": {
+    "opentype.js": "^2.0.0",
+    "subset-font": "^2.7.0"
+  }
+}

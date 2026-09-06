@@ -1,0 +1,50 @@
+---
+import Base from '../layouts/Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import { copy, locales } from '../i18n';
+---
+
+<Base title="Not found">
+  <SiteHeader />
+  <main class="lost">
+    <p class="lost__code">404</p>
+    {
+      locales.map((l) => (
+        <p data-locale={l.code} lang={l.lang}>
+          {copy[l.code].notFound}<a href="/">{copy[l.code].notFoundLink}</a>{copy[l.code].notFoundAfter}
+        </p>
+      ))
+    }
+  </main>
+</Base>
+
+<script>
+  import { setLang, syncSwitch, type Lang } from '../scripts/lang';
+  syncSwitch();
+  document.querySelectorAll<HTMLButtonElement>('[data-switch-to]').forEach((b) => {
+    b.addEventListener('click', () => setLang(b.dataset.switchTo as Lang, true));
+  });
+</script>
+
+<style>
+  .lost {
+    width: 100%;
+    max-width: var(--page);
+    margin: 0 auto;
+    padding: 4rem var(--gutter);
+    font-family: var(--sans);
+    font-size: 1.125rem;
+  }
+
+  .lost__code {
+    margin: 0 0 0.5rem;
+    font-family: var(--serif);
+    font-size: 3rem;
+    line-height: 1;
+    color: var(--ink-soft);
+  }
+
+  .lost p:last-child {
+    margin: 0;
+  }
+</style>

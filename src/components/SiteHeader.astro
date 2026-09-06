@@ -1,0 +1,137 @@
+---
+/** 共用页眉：右侧导航与语言切换。两种语言的文字都在，按 html[data-lang] 显示。 */
+import Seal from './Seal.astro';
+import { copy, locales } from '../i18n';
+import { works } from '../data/works';
+---
+
+<header class="site-header">
+
+
+  <a class="brand" href="/" aria-label="长作 Longform Works">
+    <Seal size={32} stamp />
+  </a>
+
+  <nav class="nav">
+    {
+      works.length > 0 && (
+        <a href="/works" aria-current={Astro.url.pathname === '/works' ? 'page' : undefined}>
+          {locales.map((l) => (
+            <span data-locale={l.code} lang={l.lang}>{copy[l.code].nav.works}</span>
+          ))}
+        </a>
+      )
+    }
+  </nav>
+
+  <div class="lang" role="group" aria-label="Language / 语言">
+    {
+      locales.map((l) => (
+        <button
+          type="button"
+          class="lang__btn"
+          data-switch-to={l.code}
+          lang={l.lang}
+          aria-pressed="false"
+          aria-label={l.name}
+        >
+          {l.label}
+        </button>
+      ))
+    }
+  </div>
+</header>
+
+<style>
+  .site-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.25rem var(--gutter) 0;
+    width: 100%;
+    max-width: var(--page);
+    margin: 0 auto;
+    font-family: var(--sans);
+    font-size: 1.0625rem;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .nav {
+    display: flex;
+    gap: 1.25rem;
+    margin-left: auto;
+  }
+
+  .nav a {
+    text-decoration: none;
+    color: var(--ink-soft);
+    padding: 0.6rem 0;
+  }
+
+  .nav a:hover,
+  .nav a[aria-current='page'] {
+    color: var(--ink);
+  }
+
+  /* 语言开关：双段胶囊，当前语言深底浅字 */
+  .lang {
+    display: inline-flex;
+    padding: 3px;
+    gap: 2px;
+    border-radius: 999px;
+    background: var(--hover);
+  }
+
+  .lang__btn {
+    appearance: none;
+    background: none;
+    border: 0;
+    margin: 0;
+    min-width: 2.75rem;
+    min-height: 2rem;
+    padding: 0.3rem 0.7rem;
+    font: inherit;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    line-height: 1.2;
+    color: var(--ink-soft);
+    cursor: pointer;
+    border-radius: 999px;
+    transition: background-color 140ms ease, color 140ms ease;
+  }
+
+  .lang__btn:hover {
+    color: var(--ink);
+  }
+
+  .lang__btn[aria-pressed='true'] {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .lang__btn:focus-visible {
+    outline-offset: 1px;
+  }
+
+  /* 点击区扩到 44px 高，外观不变 */
+  .lang__btn {
+    position: relative;
+  }
+
+  .lang__btn::before {
+    content: '';
+    position: absolute;
+    inset: -6px 0;
+  }
+
+  @media (max-width: 40em) {
+    .site-header {
+      gap: 1rem;
+    }
+  }
+</style>

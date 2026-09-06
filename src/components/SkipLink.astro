@@ -1,0 +1,28 @@
+---
+/** 键盘用户的跳转链接，两种语言 */
+import { copy, locales } from '../i18n';
+---
+
+{locales.map((l) => (
+  <a class="skip" href={`#main-${l.code}`} data-locale={l.code} lang={l.lang}>
+    {copy[l.code].skip}
+  </a>
+))}
+
+<style>
+  .skip {
+    position: absolute;
+    left: 1rem;
+    top: -3rem;
+    padding: 0.5rem 0.75rem;
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 4px;
+    font-family: var(--sans);
+    z-index: 10;
+  }
+
+  .skip:focus {
+    top: 1rem;
+  }
+</style>
